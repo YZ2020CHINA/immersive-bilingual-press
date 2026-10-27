@@ -1,0 +1,1234 @@
+/**
+ * 沉浸式双语译林 v2.0 - 弹窗样式表 (Popup CSS)
+ * 核心特性：
+ * 1. 一级极简图标网格 + 二级滑动子菜单架构
+ * 2. 根据整体 UI 风格动态切换专属矢量图标 (.icon-retro 雕版印章风格 vs .icon-liquid 液态高光折射风格)
+ * 3. 「还原网页原文」按钮 (.primary-btn.active) 采用与各自主题饱和度、色调高度契合的粉红色系：
+ *    - 复古报刊书籍风格：古典胭脂干枯玫瑰粉 (#c86478 -> #b55367，低饱和暖调印刷油墨感)
+ *    - 液态玻璃风格：高透樱花玫瑰流体玻璃粉 (rgba(244, 114, 182, 0.86) -> rgba(236, 72, 153, 0.82)，带镜面内高光与柔粉光晕)
+ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 364px;
+  font-size: 13px;
+  position: relative;
+  overflow-x: hidden;
+  transition: background 0.28s ease, color 0.25s ease;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* 根据当前主题控制专属风格 SVG 图标显示 */
+body[data-theme="retro-paper"] .icon-liquid {
+  display: none !important;
+}
+body[data-theme="retro-paper"] .icon-retro {
+  display: block !important;
+}
+
+body[data-theme="liquid-glass"] .icon-retro {
+  display: none !important;
+}
+body[data-theme="liquid-glass"] .icon-liquid {
+  display: block !important;
+}
+
+/* 视图动画 */
+.view-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  animation: oit-panel-fade 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes oit-panel-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   主题一：复古报纸书籍风格 (Vintage Newspaper & Book Typography - Default)
+   ========================================================================== */
+body[data-theme="retro-paper"] {
+  background-color: #f3ead6;
+  background-image:
+    radial-gradient(rgba(115, 88, 52, 0.075) 1px, transparent 0),
+    radial-gradient(rgba(92, 70, 40, 0.05) 1px, transparent 0),
+    repeating-linear-gradient(
+      0deg,
+      rgba(130, 102, 68, 0.025) 0px,
+      rgba(130, 102, 68, 0.025) 1px,
+      transparent 1px,
+      transparent 22px
+    ),
+    linear-gradient(180deg, #f8f1df 0%, #ede0c5 100%);
+  background-size: 16px 16px, 24px 24px, 100% 22px, 100% 100%;
+  background-position: 0 0, 8px 8px, 0 0, 0 0;
+  color: #261d14;
+  font-family: "Georgia", "Songti SC", "STSong", "Noto Serif SC", "SimSun", "PMingLiU", "Times New Roman", serif;
+}
+
+body[data-theme="retro-paper"] .liquid-ambient {
+  display: none;
+}
+
+body[data-theme="retro-paper"] .container {
+  padding: 13px 14px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  border: 1px solid rgba(74, 59, 44, 0.28);
+  margin: 4px;
+  box-shadow: inset 0 0 28px rgba(128, 96, 56, 0.09);
+}
+
+/* 复古报头 Masthead */
+body[data-theme="retro-paper"] .header {
+  border-top: 2px solid #2b2218;
+  border-bottom: 3px double #2b2218;
+  padding: 5px 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+body[data-theme="retro-paper"] .masthead-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(74, 59, 44, 0.35);
+  padding-bottom: 4px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: #5c4935;
+  font-weight: 700;
+}
+
+body[data-theme="retro-paper"] .logo-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 3px;
+  background: #7c2d12;
+  color: #fbf5e6;
+  border: 1.5px solid #2b2218;
+  box-shadow: 2px 2px 0px #2b2218;
+  font-weight: 700;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body[data-theme="retro-paper"] h1 {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #1f170f;
+  letter-spacing: 0.03em;
+}
+
+body[data-theme="retro-paper"] .version-pill {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  background: #e6d7b8;
+  color: #5c4935;
+  border: 1px solid #8a7356;
+  border-radius: 2px;
+  font-family: "Courier New", Courier, monospace;
+}
+
+body[data-theme="retro-paper"] .subtitle {
+  font-size: 11px;
+  color: #5c4938;
+  margin-top: 1px;
+  font-style: italic;
+}
+
+body[data-theme="retro-paper"] .status-pill {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 2px;
+  border: 1px solid #6e5a44;
+}
+
+body[data-theme="retro-paper"] .status-pill.checking {
+  background: #e6d7b8;
+  color: #4a3b2c;
+}
+
+body[data-theme="retro-paper"] .status-pill.online {
+  background: #d9e5cf;
+  color: #22441b;
+  border-color: #4b6e40;
+}
+
+body[data-theme="retro-paper"] .status-pill.offline {
+  background: #f2d6ce;
+  color: #7c2d12;
+  border-color: #994126;
+}
+
+/* 复古主按钮 & 粉红色「还原网页原文」激活态（古典干枯玫瑰胭脂粉，契合泛黄书纸低饱和暖调） */
+body[data-theme="retro-paper"] .primary-btn {
+  width: 100%;
+  border: 1.5px solid #2b2218;
+  border-radius: 3px;
+  padding: 10px 13px;
+  background: #7c2d12;
+  color: #fdf8ed;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 3px 3px 0px #2b2218;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.18s ease;
+}
+
+body[data-theme="retro-paper"] .primary-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #2b2218;
+  background: #8f3415;
+}
+
+body[data-theme="retro-paper"] .primary-btn.active {
+  background: linear-gradient(180deg, #cf6a7e 0%, #b85267 100%);
+  color: #fff9fa;
+  border-color: #3d1d24;
+  box-shadow: 3px 3px 0px #3d1d24;
+}
+
+body[data-theme="retro-paper"] .primary-btn.active:hover {
+  background: linear-gradient(180deg, #d87589 0%, #c45b71 100%);
+  box-shadow: 4px 4px 0px #3d1d24;
+}
+
+body[data-theme="retro-paper"] .shortcut-tag {
+  background: rgba(253, 248, 237, 0.2);
+  border: 1px solid rgba(253, 248, 237, 0.48);
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-size: 10.5px;
+  font-family: "Courier New", Courier, monospace;
+}
+
+/* 复古一级功能图标矩阵 (2x2 Woodcut Stamp Grid) */
+body[data-theme="retro-paper"] .nav-grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 1px 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4a3b2c;
+  border-bottom: 1px dashed rgba(110, 90, 68, 0.45);
+  padding-bottom: 4px;
+}
+
+body[data-theme="retro-paper"] .summary-chip {
+  font-size: 10.5px;
+  font-weight: 400;
+  font-style: italic;
+  color: #6e5a44;
+}
+
+body[data-theme="retro-paper"] .icon-nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+body[data-theme="retro-paper"] .nav-icon-card {
+  background: rgba(251, 246, 233, 0.85);
+  border: 1.5px solid #6e5a44;
+  border-top: 2.5px solid #3d3022;
+  border-radius: 2px;
+  padding: 12px 8px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  color: #261d14;
+  box-shadow: 2px 2px 0px rgba(43, 34, 24, 0.22);
+  transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+}
+
+body[data-theme="retro-paper"] .nav-icon-card:hover {
+  transform: translate(-1px, -1px);
+  background: #fdf9ef;
+  border-color: #7c2d12;
+  box-shadow: 3px 3px 0px #2b2218;
+}
+
+body[data-theme="retro-paper"] .nav-icon-emblem {
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+  background: #efe2c4;
+  border: 1px solid #9c8468;
+  color: #7c2d12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 8px rgba(124, 45, 18, 0.08);
+}
+
+body[data-theme="retro-paper"] .nav-icon-card:hover .nav-icon-emblem {
+  background: #7c2d12;
+  color: #fdf8ed;
+  border-color: #2b2218;
+}
+
+body[data-theme="retro-paper"] .nav-card-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1f170f;
+  margin-top: 2px;
+}
+
+body[data-theme="retro-paper"] .nav-card-sub {
+  font-size: 10.5px;
+  color: #6e5a44;
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 复古二级菜单顶部返回栏 */
+body[data-theme="retro-paper"] .subpanel-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #4a3b2c;
+}
+
+body[data-theme="retro-paper"] .back-btn {
+  border: 1px solid #5c4935;
+  background: #efe2c4;
+  color: #261d14;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 1.5px 1.5px 0px #2b2218;
+}
+
+body[data-theme="retro-paper"] .back-btn:hover {
+  background: #7c2d12;
+  color: #fdf8ed;
+}
+
+body[data-theme="retro-paper"] .subpanel-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #261d14;
+}
+
+/* 复古通用卡片与控件 */
+body[data-theme="retro-paper"] .card {
+  background: rgba(251, 246, 233, 0.82);
+  border: 1px solid #9c8468;
+  border-top: 2px solid #5c4935;
+  border-radius: 2px;
+  padding: 9px 11px;
+  box-shadow: 2px 2px 0px rgba(74, 59, 44, 0.12);
+}
+
+body[data-theme="retro-paper"] .card-header label,
+body[data-theme="retro-paper"] .subpanel-header label {
+  font-weight: 700;
+  font-size: 12px;
+  color: #261d14;
+}
+
+body[data-theme="retro-paper"] .section-tag {
+  font-size: 10.5px;
+  color: #6e5a44;
+  font-style: italic;
+}
+
+body[data-theme="retro-paper"] .segmented-control {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: #e5d8bc;
+  padding: 3px;
+  border: 1px solid #8a7356;
+  border-radius: 2px;
+}
+
+body[data-theme="retro-paper"] .seg-btn,
+body[data-theme="retro-paper"] .lang-chip-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #4a3b2c;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+body[data-theme="retro-paper"] .lang-chip-btn {
+  background: #efe2c4;
+  border-color: #9c8468;
+}
+
+body[data-theme="retro-paper"] .seg-btn.active,
+body[data-theme="retro-paper"] .lang-chip-btn.active {
+  background: #fbf6e9;
+  color: #7c2d12;
+  border-color: #4a3b2c;
+  box-shadow: 1.5px 1.5px 0px rgba(43, 34, 24, 0.45);
+}
+
+body[data-theme="retro-paper"] .select-input,
+body[data-theme="retro-paper"] .text-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #7d684e;
+  border-radius: 2px;
+  font-family: inherit;
+  font-size: 12.5px;
+  color: #261d14;
+  background: #fdf9ef;
+  outline: none;
+}
+
+body[data-theme="retro-paper"] .swap-btn {
+  margin-top: 15px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #7d684e;
+  border-radius: 2px;
+  background: #efe3c8;
+  color: #3d3022;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 1px 1px 0px #4a3b2c;
+}
+
+body[data-theme="retro-paper"] .swap-btn:hover,
+body[data-theme="retro-paper"] .secondary-btn:hover {
+  background: #7c2d12;
+  color: #fdf8ed;
+}
+
+body[data-theme="retro-paper"] .secondary-btn {
+  border: 1px solid #4a3b2c;
+  background: #e6d7b8;
+  color: #261d14;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 1px 1px 0px #4a3b2c;
+}
+
+body[data-theme="retro-paper"] .text-btn {
+  border: none;
+  background: transparent;
+  color: #7c2d12;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+body[data-theme="retro-paper"] .hint-text {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #5c4935;
+  line-height: 1.45;
+}
+
+body[data-theme="retro-paper"] .hint-text code,
+body[data-theme="retro-paper"] .guide-list code {
+  background: #e8dac0;
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: #7c2d12;
+  font-family: "Courier New", Courier, monospace;
+}
+
+body[data-theme="retro-paper"] .switch-row {
+  border-bottom: 1px dashed rgba(125, 104, 78, 0.4);
+  padding-bottom: 7px;
+}
+
+body[data-theme="retro-paper"] .switch-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+body[data-theme="retro-paper"] .switch-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #261d14;
+}
+
+body[data-theme="retro-paper"] .switch-desc {
+  font-size: 11px;
+  color: #5c4935;
+  margin-top: 1px;
+}
+
+body[data-theme="retro-paper"] input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #7c2d12;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+body[data-theme="retro-paper"] .social-link {
+  border: 1px solid #9c8468;
+  background: #f9f2e2;
+  color: #261d14;
+  border-radius: 2px;
+}
+
+body[data-theme="retro-paper"] .social-link:hover {
+  background: #efe2c4;
+  border-color: #7c2d12;
+}
+
+body[data-theme="retro-paper"] .social-url {
+  color: #7c2d12;
+}
+
+
+/* ==========================================================================
+   主题二：液态玻璃风格 (Liquid Glass UI)
+   ========================================================================== */
+body[data-theme="liquid-glass"] {
+  background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 48%, #fce7f3 100%);
+  color: #0f172a;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+body[data-theme="liquid-glass"] .liquid-ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+body[data-theme="liquid-glass"] .orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(32px);
+  opacity: 0.75;
+}
+
+body[data-theme="liquid-glass"] .orb-1 {
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, #60a5fa, #3b82f6);
+  top: -40px;
+  left: -30px;
+}
+
+body[data-theme="liquid-glass"] .orb-2 {
+  width: 210px;
+  height: 210px;
+  background: radial-gradient(circle, #f472b6, #818cf8);
+  bottom: 10px;
+  right: -50px;
+}
+
+body[data-theme="liquid-glass"] .orb-3 {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, #38bdf8, #c084fc);
+  top: 42%;
+  left: 25%;
+  opacity: 0.45;
+}
+
+body[data-theme="liquid-glass"] .container {
+  position: relative;
+  z-index: 1;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+body[data-theme="liquid-glass"] .header {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.4));
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 18px;
+  padding: 10px 13px;
+  box-shadow:
+    0 10px 26px -6px rgba(15, 23, 42, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+body[data-theme="liquid-glass"] .masthead-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #475569;
+}
+
+body[data-theme="liquid-glass"] .logo-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, rgba(0, 122, 255, 0.92), rgba(88, 86, 214, 0.88));
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 6px 14px rgba(0, 122, 255, 0.32),
+    inset 0 1px 1px rgba(255, 255, 255, 0.65);
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body[data-theme="liquid-glass"] h1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+body[data-theme="liquid-glass"] .version-pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #0066cc;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+}
+
+body[data-theme="liquid-glass"] .subtitle {
+  font-size: 11px;
+  color: #475569;
+  margin-top: 1px;
+}
+
+body[data-theme="liquid-glass"] .status-pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+}
+
+body[data-theme="liquid-glass"] .status-pill.checking {
+  background: rgba(255, 255, 255, 0.6);
+  color: #475569;
+}
+
+body[data-theme="liquid-glass"] .status-pill.online {
+  background: rgba(220, 252, 231, 0.8);
+  color: #15803d;
+}
+
+body[data-theme="liquid-glass"] .status-pill.offline {
+  background: rgba(254, 226, 226, 0.84);
+  color: #b91c1c;
+}
+
+/* 液态玻璃主按钮 & 粉红色「还原网页原文」激活态（高透樱花玫瑰流体玻璃粉，饱和度柔和通透） */
+body[data-theme="liquid-glass"] .primary-btn {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  padding: 11px 14px;
+  background: linear-gradient(135deg, rgba(0, 122, 255, 0.88), rgba(88, 86, 214, 0.85));
+  backdrop-filter: blur(16px);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow:
+    0 10px 24px -4px rgba(0, 122, 255, 0.36),
+    inset 0 1px 1px rgba(255, 255, 255, 0.7);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.2s ease;
+}
+
+body[data-theme="liquid-glass"] .primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 28px -4px rgba(0, 122, 255, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.85);
+}
+
+body[data-theme="liquid-glass"] .primary-btn.active {
+  background: linear-gradient(
+    135deg,
+    rgba(244, 114, 182, 0.88) 0%,
+    rgba(236, 72, 153, 0.84) 55%,
+    rgba(225, 29, 116, 0.82) 100%
+  );
+  border-color: rgba(255, 240, 248, 0.82);
+  color: #ffffff;
+  box-shadow:
+    0 10px 26px -4px rgba(236, 72, 153, 0.42),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.82);
+}
+
+body[data-theme="liquid-glass"] .primary-btn.active:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(249, 130, 192, 0.92) 0%,
+    rgba(240, 82, 162, 0.88) 100%
+  );
+  box-shadow:
+    0 14px 30px -4px rgba(236, 72, 153, 0.52),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9);
+}
+
+body[data-theme="liquid-glass"] .shortcut-tag {
+  background: rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+/* 液态玻璃一级功能图标矩阵 (2x2 Liquid Specular Grid) */
+body[data-theme="liquid-glass"] .nav-grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+}
+
+body[data-theme="liquid-glass"] .summary-chip {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #475569;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+}
+
+body[data-theme="liquid-glass"] .icon-nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+body[data-theme="liquid-glass"] .nav-icon-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.42));
+  backdrop-filter: blur(22px) saturate(190%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 18px;
+  padding: 13px 8px 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  color: #0f172a;
+  box-shadow:
+    0 8px 22px -6px rgba(15, 23, 42, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+body[data-theme="liquid-glass"] .nav-icon-card:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.58));
+  box-shadow:
+    0 12px 26px -6px rgba(0, 122, 255, 0.16),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+}
+
+body[data-theme="liquid-glass"] .nav-icon-emblem {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(224, 242, 254, 0.65));
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  color: #0066cc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 4px 12px rgba(0, 122, 255, 0.14),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  transition: all 0.16s ease;
+}
+
+body[data-theme="liquid-glass"] .nav-icon-card:hover .nav-icon-emblem {
+  background: linear-gradient(135deg, #007aff, #5856d6);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 6px 14px rgba(0, 122, 255, 0.28);
+}
+
+body[data-theme="liquid-glass"] .nav-card-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-top: 2px;
+}
+
+body[data-theme="liquid-glass"] .nav-card-sub {
+  font-size: 10.5px;
+  color: #475569;
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 液态玻璃二级菜单顶部返回栏 */
+body[data-theme="liquid-glass"] .subpanel-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 4px;
+}
+
+body[data-theme="liquid-glass"] .back-btn {
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(14px);
+  color: #0066cc;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  transition: all 0.15s ease;
+}
+
+body[data-theme="liquid-glass"] .back-btn:hover {
+  background: #007aff;
+  color: #ffffff;
+}
+
+body[data-theme="liquid-glass"] .subpanel-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* 液态玻璃卡片与控件 */
+body[data-theme="liquid-glass"] .card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.44));
+  backdrop-filter: blur(22px) saturate(190%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 16px;
+  padding: 10px 12px;
+  box-shadow:
+    0 8px 24px -6px rgba(15, 23, 42, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.92);
+}
+
+body[data-theme="liquid-glass"] .card-header label,
+body[data-theme="liquid-glass"] .subpanel-header label {
+  font-weight: 600;
+  font-size: 12px;
+  color: #1e293b;
+}
+
+body[data-theme="liquid-glass"] .section-tag {
+  font-size: 10.5px;
+  color: #64748b;
+}
+
+body[data-theme="liquid-glass"] .segmented-control {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  background: rgba(15, 23, 42, 0.06);
+  padding: 3.5px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+body[data-theme="liquid-glass"] .seg-btn,
+body[data-theme="liquid-glass"] .lang-chip-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #475569;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+body[data-theme="liquid-glass"] .lang-chip-btn {
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+body[data-theme="liquid-glass"] .seg-btn.active,
+body[data-theme="liquid-glass"] .lang-chip-btn.active {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0066cc;
+  border-color: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
+}
+
+body[data-theme="liquid-glass"] .select-input,
+body[data-theme="liquid-glass"] .text-input {
+  width: 100%;
+  padding: 6.5px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 12.5px;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  outline: none;
+}
+
+body[data-theme="liquid-glass"] .swap-btn {
+  margin-top: 15px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  color: #0066cc;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+}
+
+body[data-theme="liquid-glass"] .swap-btn:hover,
+body[data-theme="liquid-glass"] .secondary-btn:hover {
+  background: #007aff;
+  color: #ffffff;
+}
+
+body[data-theme="liquid-glass"] .secondary-btn {
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.8);
+  color: #0066cc;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 6px 11px;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+body[data-theme="liquid-glass"] .text-btn {
+  border: none;
+  background: transparent;
+  color: #0066cc;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+body[data-theme="liquid-glass"] .hint-text {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #475569;
+  line-height: 1.45;
+}
+
+body[data-theme="liquid-glass"] .hint-text code,
+body[data-theme="liquid-glass"] .guide-list code {
+  background: rgba(255, 255, 255, 0.75);
+  padding: 1px 5px;
+  border-radius: 5px;
+  color: #0066cc;
+}
+
+body[data-theme="liquid-glass"] .switch-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+body[data-theme="liquid-glass"] .switch-desc {
+  font-size: 11px;
+  color: #475569;
+  margin-top: 1px;
+}
+
+body[data-theme="liquid-glass"] input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #007aff;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+body[data-theme="liquid-glass"] .social-link {
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.58);
+  color: #0f172a;
+  border-radius: 10px;
+}
+
+body[data-theme="liquid-glass"] .social-link:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #007aff;
+}
+
+body[data-theme="liquid-glass"] .social-url {
+  color: #0066cc;
+}
+
+
+/* ==========================================================================
+   公共组件与排版结构 (Shared Layout Structure)
+   ========================================================================== */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-icon-wrap {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon-wrap svg {
+  width: 18px;
+  height: 18px;
+}
+
+.nav-icon-emblem svg {
+  width: 26px;
+  height: 26px;
+}
+
+.card-header,
+.subpanel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.subpanel-header {
+  margin-top: 9px;
+}
+
+.ui-lang-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.lang-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lang-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lang-label {
+  font-size: 10.5px;
+  opacity: 0.78;
+}
+
+.custom-model-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.host-details {
+  margin-top: 7px;
+  font-size: 11px;
+}
+
+.host-details summary {
+  cursor: pointer;
+  opacity: 0.85;
+  user-select: none;
+}
+
+.host-box {
+  margin-top: 5px;
+}
+
+.switches-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* 使用说明指南与开发者卡片 */
+.version-badge-inline {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(124, 45, 18, 0.12);
+}
+
+body[data-theme="liquid-glass"] .version-badge-inline {
+  background: rgba(0, 122, 255, 0.14);
+  color: #0066cc;
+  border-radius: 999px;
+}
+
+.guide-list {
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.author-header {
+  margin-bottom: 7px;
+}
+
+.author-title {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  display: block;
+}
+
+.author-links {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  text-decoration: none;
+  font-size: 11px;
+  transition: all 0.14s ease;
+}
+
+.social-name {
+  font-weight: 700;
+}
+
+.social-url {
+  font-size: 10.5px;
+  opacity: 0.88;
+}
+
+.help-box {
+  padding: 9px 11px;
+  font-size: 11.5px;
+}
+
+.help-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.help-list {
+  padding-left: 16px;
+  line-height: 1.55;
+}

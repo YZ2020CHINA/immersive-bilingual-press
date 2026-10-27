@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>沉浸式双语译林 v2.0</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body data-theme="retro-paper">
+  <!-- 液态玻璃专属流光背景球（仅在 liquid-glass 主题下显现） -->
+  <div class="liquid-ambient" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <div class="container">
+    <!-- 顶部公共报头 / 刊头 (Masthead) -->
+    <header class="header">
+      <div class="masthead-top">
+        <span class="masthead-issue" id="masthead-edition">VOL. II · EDITION v2.0</span>
+        <span id="status-pill" class="status-pill checking">检测中...</span>
+      </div>
+      <div class="brand">
+        <span class="logo-badge" id="logo-badge-text">译</span>
+        <div class="brand-text">
+          <div class="title-row">
+            <h1 id="app-title">沉浸式双语译林</h1>
+            <span class="version-pill">v2.0</span>
+          </div>
+          <p id="subtitle-text" class="subtitle">自动检测 ➔ 简体中文 · 实时对照</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         一级主视图 (Level-1 Main View)：核心触发按钮 + 4 个风格化功能图标入口
+         ==================================================================== -->
+    <main id="main-view" class="view-panel">
+      <!-- 一键整页双语翻译 / 还原网页原文（激活态为随主题调校饱和度的粉红色） -->
+      <button id="toggle-page-btn" class="primary-btn">
+        <span class="btn-icon-wrap" aria-hidden="true">
+          <!-- 复古报刊风格按钮图标 (开卷/印章) -->
+          <svg class="style-icon icon-retro" viewBox="0 0 24 24" fill="none">
+            <path d="M4 5.5C4 4.67 4.67 4 5.5 4H11V19.5H5.5C4.67 19.5 4 18.83 4 18V5.5Z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M20 5.5C20 4.67 19.33 4 18.5 4H13V19.5H18.5C19.33 19.5 20 18.83 20 18V5.5Z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M6.5 8H9.5M6.5 11.5H9.5M14.5 8H17.5M14.5 11.5H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <!-- 液态玻璃风格按钮图标 (灵动地球/光环) -->
+          <svg class="style-icon icon-liquid" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/>
+            <ellipse cx="12" cy="12" rx="4" ry="8.5" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M4 12H20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span id="toggle-btn-text">开启整页双语对照</span>
+        <kbd class="shortcut-tag">Alt+A</kbd>
+      </button>
+
+      <!-- 一级页面只展示 4 个功能模块 UI 图标入口（所有详细设置均收納在二级菜单中） -->
+      <div class="nav-grid-header">
+        <span id="nav-section-label">功能与设置中心</span>
+        <span id="current-summary-pill" class="summary-chip">复古书报 · 本地模型</span>
+      </div>
+
+      <nav class="icon-nav-grid" aria-label="功能设置导航">
+        <!-- 入口 1：语种与翻译引擎 (Languages & Engine) -->
+        <button type="button" class="nav-icon-card" data-target-panel="panel-translate">
+          <div class="nav-icon-emblem">
+            <!-- 复古报刊书籍风格：雕版活字与双语印章图标 -->
+            <svg class="style-icon icon-retro" viewBox="0 0 36 36" fill="none">
+              <rect x="4" y="4" width="16" height="16" rx="1.5" stroke="currentColor" stroke-width="2"/>
+              <rect x="16" y="16" width="16" height="16" rx="1.5" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="2"/>
+              <path d="M8.5 9.5H15.5M12 7.5V9.5M10 9.5C10.5 12 12.5 14 15 15M14 9.5C13.2 12 11.5 14 9 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M21 27L24 19.5L27 27M22 25H26" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <!-- 液态玻璃风格：流体双气泡高光折射图标 -->
+            <svg class="style-icon icon-liquid" viewBox="0 0 36 36" fill="none">
+              <rect x="3.5" y="4.5" width="17" height="15" rx="6" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="2"/>
+              <rect x="15.5" y="16.5" width="17" height="15" rx="6" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="2"/>
+              <path d="M8.5 10H15.5M12 8V10M10.2 10C10.8 12.4 12.6 14 14.8 14.8M13.8 10C13 12.4 11.4 14 9.2 14.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M21 27L24 20.5L27 27M22 25.2H26" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="nav-card-title" id="nav-title-translate">语种与引擎</span>
+          <span class="nav-card-sub" id="nav-sub-translate">自动 ➔ 简中</span>
+        </button>
+
+        <!-- 入口 2：视觉风格与插件语言 (UI Style & App Language) -->
+        <button type="button" class="nav-icon-card" data-target-panel="panel-appearance">
+          <div class="nav-icon-emblem">
+            <!-- 复古报刊书籍风格：古典羽毛笔与书卷版式图标 -->
+            <svg class="style-icon icon-retro" viewBox="0 0 36 36" fill="none">
+              <path d="M7 7.5H24V28.5H7V7.5Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M10.5 12H20.5M10.5 16H18.5M10.5 20H16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M28.5 7.5C25 11 22 16.5 20.5 23L18.5 25L20.5 23C24.5 21.5 28.5 17.5 30 11.5L28.5 7.5Z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+            <!-- 液态玻璃风格：多层折射液态棱镜与星芒图标 -->
+            <svg class="style-icon icon-liquid" viewBox="0 0 36 36" fill="none">
+              <circle cx="15.5" cy="19.5" r="9.5" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2"/>
+              <circle cx="21.5" cy="14.5" r="7.5" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M27.5 5.5L28.4 8.1L31 9L28.4 9.9L27.5 12.5L26.6 9.9L24 9L26.6 8.1L27.5 5.5Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <span class="nav-card-title" id="nav-title-appearance">外观与语言</span>
+          <span class="nav-card-sub" id="nav-sub-appearance">复古书报 · 简中</span>
+        </button>
+
+        <!-- 入口 3：交互偏好开关 (Interaction & Shortcuts) -->
+        <button type="button" class="nav-icon-card" data-target-panel="panel-controls">
+          <div class="nav-icon-emblem">
+            <!-- 复古报刊书籍风格：机械拨杆与罗盘指针图标 -->
+            <svg class="style-icon icon-retro" viewBox="0 0 36 36" fill="none">
+              <rect x="5" y="6" width="26" height="24" rx="1.5" stroke="currentColor" stroke-width="2"/>
+              <path d="M9.5 12.5H26.5M9.5 18H26.5M9.5 23.5H26.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <rect x="13" y="10" width="4.5" height="5" fill="currentColor"/>
+              <rect x="20" y="15.5" width="4.5" height="5" fill="currentColor"/>
+              <rect x="11" y="21" width="4.5" height="5" fill="currentColor"/>
+            </svg>
+            <!-- 液态玻璃风格：圆润胶囊滑块与触控手势图标 -->
+            <svg class="style-icon icon-liquid" viewBox="0 0 36 36" fill="none">
+              <rect x="5" y="8" width="26" height="8" rx="4" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="1.9"/>
+              <circle cx="25" cy="12" r="2.8" fill="currentColor"/>
+              <rect x="5" y="20" width="26" height="8" rx="4" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="1.9"/>
+              <circle cx="11" cy="24" r="2.8" fill="currentColor"/>
+            </svg>
+          </div>
+          <span class="nav-card-title" id="nav-title-controls">交互与快捷键</span>
+          <span class="nav-card-sub" id="nav-sub-controls">划词 · 悬停 · 悬浮球</span>
+        </button>
+
+        <!-- 入口 4：使用指南与关于我 (Guide & Developer Info) -->
+        <button type="button" class="nav-icon-card" data-target-panel="panel-guide">
+          <div class="nav-icon-emblem">
+            <!-- 复古报刊书籍风格：精装典籍与藏书票徽章图标 -->
+            <svg class="style-icon icon-retro" viewBox="0 0 36 36" fill="none">
+              <path d="M8 6.5H27C28.1 6.5 29 7.4 29 8.5V28.5C29 29.1 28.5 29.5 28 29.5H9.5C7.8 29.5 6.5 28.2 6.5 26.5V8C6.5 7.2 7.2 6.5 8 6.5Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M11 6.5V25.5" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M15.5 11.5H24.5M15.5 15.5H22.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M7 25.5H28.5" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+            <!-- 液态玻璃风格：透明晶石指南针与信息胶囊图标 -->
+            <svg class="style-icon icon-liquid" viewBox="0 0 36 36" fill="none">
+              <circle cx="18" cy="18" r="12.5" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="2"/>
+              <path d="M18 16.5V23.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              <circle cx="18" cy="12.5" r="1.5" fill="currentColor"/>
+            </svg>
+          </div>
+          <span class="nav-card-title" id="nav-title-guide">指南与关于</span>
+          <span class="nav-card-sub" id="nav-sub-guide">说明书 · Azhou v2.0</span>
+        </button>
+      </nav>
+    </main>
+
+    <!-- ====================================================================
+         二级菜单 1：语种与翻译引擎设置 (panel-translate)
+         ==================================================================== -->
+    <section id="panel-translate" class="view-panel sub-panel hidden">
+      <div class="subpanel-topbar">
+        <button type="button" class="back-btn" data-back-main>
+          <span>←</span>
+          <span class="i18n-back">返回主菜单</span>
+        </button>
+        <h2 class="subpanel-title" id="panel-title-translate">语种与翻译引擎</h2>
+      </div>
+
+      <!-- 多语言互译选择栏 -->
+      <div class="card">
+        <div class="card-header">
+          <label id="label-lang-direction">翻译语种方向</label>
+          <span class="section-tag" id="tag-lang-direction">支持中译日/英等互译</span>
+        </div>
+        <div class="lang-bar">
+          <div class="lang-col">
+            <span class="lang-label" id="label-source-lang">源语言</span>
+            <select id="source-lang-select" class="select-input">
+              <option value="auto">自动检测 (Auto)</option>
+              <option value="zh-CN">简体中文</option>
+              <option value="zh-TW">繁體中文</option>
+              <option value="en">英语 (English)</option>
+              <option value="ja">日语 (日本語)</option>
+              <option value="ko">韩语 (한국어)</option>
+              <option value="fr">法语 (Français)</option>
+              <option value="de">德语 (Deutsch)</option>
+              <option value="es">西班牙语 (Español)</option>
+              <option value="ru">俄语 (Русский)</option>
+              <option value="pt">葡萄牙语 (Português)</option>
+              <option value="ar">阿拉伯语 (العربية)</option>
+            </select>
+          </div>
+
+          <button id="swap-lang-btn" class="swap-btn" title="交换源语言与目标语言">⇄</button>
+
+          <div class="lang-col">
+            <span class="lang-label" id="label-target-lang">目标语言</span>
+            <select id="target-lang-select" class="select-input">
+              <option value="zh-CN">简体中文</option>
+              <option value="zh-TW">繁體中文</option>
+              <option value="en">英语 (English)</option>
+              <option value="ja">日语 (日本語)</option>
+              <option value="ko">韩语 (한국어)</option>
+              <option value="fr">法语 (Français)</option>
+              <option value="de">德语 (Deutsch)</option>
+              <option value="es">西班牙语 (Español)</option>
+              <option value="ru">俄语 (Русский)</option>
+              <option value="pt">葡萄牙语 (Português)</option>
+              <option value="ar">阿拉伯语 (العربية)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 翻译引擎切换与本地模型配置 -->
+      <div class="card">
+        <div class="card-header">
+          <label id="label-engine-select">翻译引擎选择</label>
+        </div>
+        <div class="segmented-control" id="engine-switcher">
+          <button type="button" class="seg-btn active" data-engine-val="ollama" id="btn-engine-ollama">
+            🦙 本地大模型
+          </button>
+          <button type="button" class="seg-btn" data-engine-val="google" id="btn-engine-google">
+            🌐 Google 在线翻译
+          </button>
+        </div>
+
+        <!-- 本地模型配置面板 -->
+        <div id="ollama-panel" class="engine-subpanel">
+          <div class="subpanel-header">
+            <label for="model-select" id="label-local-model">本地已安装模型</label>
+            <button id="refresh-models-btn" class="text-btn">🔄 <span id="btn-refresh-text">刷新列表</span></button>
+          </div>
+          <select id="model-select" class="select-input">
+            <option value="">正在读取本地模型...</option>
+          </select>
+
+          <div class="custom-model-box">
+            <input
+              type="text"
+              id="custom-model-input"
+              class="text-input"
+              placeholder="输入其他本地模型 (如 qwen2.5:7b, deepseek-r1)"
+            />
+            <button type="button" id="add-model-btn" class="secondary-btn">添加并使用</button>
+          </div>
+
+          <details class="host-details">
+            <summary><span id="label-custom-host">本地 API 地址</span> (<span id="host-display">http://localhost:11434</span>)</summary>
+            <div class="custom-model-box host-box">
+              <input
+                type="text"
+                id="ollama-host-input"
+                class="text-input"
+                placeholder="http://localhost:11434"
+              />
+              <button type="button" id="save-host-btn" class="secondary-btn">保存地址</button>
+            </div>
+          </details>
+
+          <p id="model-hint" class="hint-text">支持 Ollama 任意模型及 OpenAI 兼容本地接口</p>
+        </div>
+
+        <!-- Google 翻译说明面板 -->
+        <div id="google-panel" class="engine-subpanel hidden">
+          <p class="hint-text google-ready-hint" id="google-ready-desc">
+            ✓ 已启用免配置 Google 在线神经网络翻译，无需启动本地 Ollama 服务即可高速互译全部语种。
+          </p>
+        </div>
+      </div>
+
+      <!-- 故障排查提示 -->
+      <div id="help-box" class="help-box hidden">
+        <div class="help-title" id="help-box-title">💡 未检测到本地服务？</div>
+        <ol class="help-list" id="help-box-list">
+          <li>可直接点击上方切换为 <b>「🌐 Google 在线翻译」</b> 立即使用；</li>
+          <li>若使用本地模型，请确认已启动 <b>Ollama</b>，或在输入框直接填写您本地已安装的任意模型名（如 <code>qwen2.5:7b</code>、<code>llama3.2</code>、<code>gemma3:4b</code>）。</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         二级菜单 2：外观风格与插件界面语言 (panel-appearance)
+         ==================================================================== -->
+    <section id="panel-appearance" class="view-panel sub-panel hidden">
+      <div class="subpanel-topbar">
+        <button type="button" class="back-btn" data-back-main>
+          <span>←</span>
+          <span class="i18n-back">返回主菜单</span>
+        </button>
+        <h2 class="subpanel-title" id="panel-title-appearance">外观风格与界面语言</h2>
+      </div>
+
+      <!-- UI 视觉风格切换器：复古报刊书籍 vs 液态玻璃 -->
+      <div class="card">
+        <div class="card-header">
+          <label id="label-ui-theme">UI 视觉风格</label>
+          <span class="section-tag" id="tag-ui-theme">网页与弹窗同步生效</span>
+        </div>
+        <div class="segmented-control" id="theme-switcher">
+          <button type="button" class="seg-btn active" data-theme-val="retro-paper" id="btn-theme-retro">
+            📜 复古报刊书籍
+          </button>
+          <button type="button" class="seg-btn" data-theme-val="liquid-glass" id="btn-theme-liquid">
+            🫧 液态玻璃
+          </button>
+        </div>
+        <p class="hint-text" id="theme-desc-hint">
+          切换后，插件主界面图标、网页双语段落块、划词气泡及悬浮球将同步切换为对应风格。
+        </p>
+      </div>
+
+      <!-- 插件界面语言切换器：简体中文 / 繁體中文 / English / 日本語 -->
+      <div class="card">
+        <div class="card-header">
+          <label id="label-ui-lang">插件界面语言 (UI Language)</label>
+        </div>
+        <div class="ui-lang-grid" id="ui-lang-switcher">
+          <button type="button" class="lang-chip-btn active" data-uilang-val="zh-CN">简体中文</button>
+          <button type="button" class="lang-chip-btn" data-uilang-val="zh-TW">繁體中文</button>
+          <button type="button" class="lang-chip-btn" data-uilang-val="en">English</button>
+          <button type="button" class="lang-chip-btn" data-uilang-val="ja">日本語</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         二级菜单 3：交互偏好与快捷方式开关 (panel-controls)
+         ==================================================================== -->
+    <section id="panel-controls" class="view-panel sub-panel hidden">
+      <div class="subpanel-topbar">
+        <button type="button" class="back-btn" data-back-main>
+          <span>←</span>
+          <span class="i18n-back">返回主菜单</span>
+        </button>
+        <h2 class="subpanel-title" id="panel-title-controls">交互与快捷开关</h2>
+      </div>
+
+      <div class="card switches-card">
+        <div class="switch-row">
+          <div>
+            <div class="switch-title" id="sw-title-selection">🖋️ 鼠标划词翻译</div>
+            <div class="switch-desc" id="sw-desc-selection">选中网页任意词句浮现“译”按钮，点击弹出可拖拽翻译卡片</div>
+          </div>
+          <input type="checkbox" id="sw-selection" checked />
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <div class="switch-title" id="sw-title-althover">⌨️ Alt 悬停段落翻译</div>
+            <div class="switch-desc" id="sw-desc-althover">鼠标指针悬停在段落上按一下 Alt 键，即刻单独翻译或还原该段</div>
+          </div>
+          <input type="checkbox" id="sw-alt-hover" checked />
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <div class="switch-title" id="sw-title-ball">🔖 页面右侧悬浮球</div>
+            <div class="switch-desc" id="sw-desc-ball">在网页右侧边缘常驻“译”书签/胶囊，随时一键切换整页双语</div>
+          </div>
+          <input type="checkbox" id="sw-floating-ball" checked />
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         二级菜单 4：使用说明功能指南与关于开发者 (panel-guide)
+         ==================================================================== -->
+    <section id="panel-guide" class="view-panel sub-panel hidden">
+      <div class="subpanel-topbar">
+        <button type="button" class="back-btn" data-back-main>
+          <span>←</span>
+          <span class="i18n-back">返回主菜单</span>
+        </button>
+        <h2 class="subpanel-title" id="panel-title-guide">使用指南与关于</h2>
+      </div>
+
+      <!-- 使用说明功能指南 -->
+      <div class="card guide-card">
+        <div class="card-header">
+          <label id="guide-section-title">📖 核心功能使用说明</label>
+          <span class="version-badge-inline">v2.0</span>
+        </div>
+        <ul class="guide-list" id="guide-list-content">
+          <li><b>整页双语对照</b>：点击主菜单大按钮、右侧悬浮球或按快捷键 <code>Alt + A</code> 开启；再次点击粉红色「还原网页原文」按钮即可一键恢复。</li>
+          <li><b>鼠标划词翻译</b>：用鼠标选中任意外文或中文词句，点击旁侧弹出的「译」图标查看实时流式译文。</li>
+          <li><b>Alt 悬停单段快译</b>：将鼠标指向任意段落并按一下 <code>Alt</code> 键，即可单独翻译或还原该段落。</li>
+          <li><b>双引擎与本地多模型</b>：在「语种与引擎」中可自由切换<b>本地大模型</b>（支持手动输入添加任意 Ollama / OpenAI 兼容模型）或免配置的 <b>Google 在线翻译</b>。</li>
+        </ul>
+      </div>
+
+      <!-- 开发者信息卡片 (Azhou) -->
+      <div class="card author-card">
+        <div class="author-header">
+          <span class="author-title" id="author-heading">👨‍💻 关于我｜Azhou 独立游戏开发者 / AI 爱好者</span>
+        </div>
+        <div class="author-links">
+          <a href="https://store.steampowered.com/curator/46288084" target="_blank" rel="noopener noreferrer" class="social-link">
+            <span class="social-name">🎮 Steam 主页</span>
+            <span class="social-url">store.steampowered.com/curator/46288084 ↗</span>
+          </a>
+          <a href="https://github.com/YZ2020CHINA" target="_blank" rel="noopener noreferrer" class="social-link">
+            <span class="social-name">🐙 GitHub 主页</span>
+            <span class="social-url">github.com/YZ2020CHINA ↗</span>
+          </a>
+          <a href="https://space.bilibili.com/404919238" target="_blank" rel="noopener noreferrer" class="social-link">
+            <span class="social-name">📺 Bilibili</span>
+            <span class="social-url">space.bilibili.com/404919238 ↗</span>
+          </a>
+          <a href="https://www.youtube.com/@ams-studio" target="_blank" rel="noopener noreferrer" class="social-link">
+            <span class="social-name">▶️ YouTube</span>
+            <span class="social-url">youtube.com/@ams-studio ↗</span>
+          </a>
+          <a href="https://x.com/johnvauk" target="_blank" rel="noopener noreferrer" class="social-link">
+            <span class="social-name">𝕏 X (Twitter)</span>
+            <span class="social-url">x.com/johnvauk ↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,450 @@
+/**
+ * Ollama & Google 沉浸式翻译 v2.0 - 网页注入样式 (双语段落、划词气泡、Alt 悬停高亮、右侧悬浮球)
+ * 内置两套精心调校的视觉主题：
+ * 1. [data-oit-theme="retro-paper"] 复古报纸书籍风格（默认：米黄纸质纹理、衬线印刷字体、古典双线报刊边框与藏书票质感）
+ * 2. [data-oit-theme="liquid-glass"] 液态玻璃风格（高透磨砂 backdrop-filter、高光折射边缘、流体渐变光晕与灵动胶囊交互）
+ */
+
+/* ==================== 1. 段落双语对照译文块 ==================== */
+.oit-bilingual-block {
+  display: block;
+  margin-top: 8px !important;
+  margin-bottom: 10px !important;
+  padding: 9px 14px !important;
+  font-size: 0.96em !important;
+  line-height: 1.72 !important;
+  word-break: break-word !important;
+  transition: all 0.24s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  position: relative !important;
+}
+
+/* 主题 A：复古报纸书籍风格 (Retro Newspaper & Book Press) */
+.oit-bilingual-block,
+.oit-bilingual-block[data-oit-theme="retro-paper"] {
+  background-color: #f4ecd8 !important;
+  background-image:
+    radial-gradient(rgba(120, 95, 60, 0.06) 1px, transparent 0),
+    radial-gradient(rgba(120, 95, 60, 0.04) 1px, transparent 0),
+    linear-gradient(180deg, rgba(255, 251, 240, 0.65) 0%, rgba(235, 224, 198, 0.65) 100%) !important;
+  background-size: 16px 16px, 24px 24px, 100% 100% !important;
+  background-position: 0 0, 8px 8px, 0 0 !important;
+  color: #2b2218 !important;
+  border-top: 1px solid #c9b998 !important;
+  border-bottom: 1px solid #c9b998 !important;
+  border-right: 1px solid #d8cbb0 !important;
+  border-left: 4px double #7c2d12 !important;
+  border-radius: 2px !important;
+  box-shadow:
+    inset 0 0 18px rgba(139, 109, 71, 0.08),
+    2px 2px 6px rgba(43, 34, 24, 0.07) !important;
+  font-family: "Georgia", "Songti SC", "STSong", "Noto Serif SC", "SimSun", "PMingLiU", "Times New Roman", serif !important;
+  letter-spacing: 0.015em !important;
+}
+
+/* 主题 B：液态玻璃风格 (Liquid Glass) */
+.oit-bilingual-block[data-oit-theme="liquid-glass"] {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.66) 0%,
+    rgba(240, 247, 255, 0.48) 55%,
+    rgba(230, 242, 255, 0.58) 100%
+  ) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  color: inherit !important;
+  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+  border-left: 3.5px solid rgba(0, 122, 255, 0.85) !important;
+  border-radius: 14px !important;
+  box-shadow:
+    0 8px 24px -4px rgba(15, 23, 42, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.35) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif !important;
+  letter-spacing: 0.005em !important;
+}
+
+/* 针对标题或内联元素的紧凑双语块 */
+.oit-bilingual-inline {
+  margin-top: 5px !important;
+  padding: 4px 10px !important;
+  font-size: 0.86em !important;
+  font-weight: normal !important;
+}
+
+/* 流式生成中的光标动画 */
+.oit-streaming-cursor::after {
+  content: "▋";
+  display: inline-block;
+  margin-left: 4px;
+  color: #8b261d;
+  animation: oit-blink 0.85s infinite;
+  font-size: 0.88em;
+}
+
+.oit-bilingual-block[data-oit-theme="liquid-glass"].oit-streaming-cursor::after,
+#oit-selection-popup[data-oit-theme="liquid-glass"] .oit-streaming-cursor::after {
+  color: #007aff;
+}
+
+@keyframes oit-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+/* 等待队列中的占位提示 */
+.oit-loading-hint {
+  color: #78654e !important;
+  font-size: 0.85em !important;
+  font-style: italic !important;
+}
+
+.oit-bilingual-block[data-oit-theme="liquid-glass"].oit-loading-hint {
+  color: #475569 !important;
+}
+
+.oit-error-text {
+  color: #991b1b !important;
+  font-size: 0.86em !important;
+}
+
+/* Alt 悬停时的段落视觉反馈 */
+.oit-hover-target {
+  outline: 2px dashed rgba(124, 45, 18, 0.65) !important;
+  outline-offset: 3px !important;
+  border-radius: 3px !important;
+  transition: outline 0.12s ease !important;
+}
+
+html[data-oit-theme="liquid-glass"] .oit-hover-target {
+  outline: 2px solid rgba(0, 122, 255, 0.55) !important;
+  border-radius: 10px !important;
+}
+
+/* ==================== 2. 鼠标划词小图标 (“译” 触发按钮) ==================== */
+#oit-selection-btn {
+  position: fixed;
+  z-index: 2147483646;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  font-weight: 700;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+/* 复古书报风划词按钮（藏书印章质感） */
+#oit-selection-btn,
+#oit-selection-btn[data-oit-theme="retro-paper"] {
+  background: #f4ecd8;
+  color: #7c2d12;
+  border: 2px solid #7c2d12;
+  border-radius: 3px;
+  box-shadow: 2px 2px 0px #2b2218, 0 4px 10px rgba(43, 34, 24, 0.24);
+  font-family: "Georgia", "Songti SC", "STSong", "Noto Serif SC", serif;
+}
+
+/* 液态玻璃风划词按钮 */
+#oit-selection-btn[data-oit-theme="liquid-glass"] {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(224, 242, 254, 0.68));
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  color: #0066cc;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow:
+    0 6px 18px rgba(0, 122, 255, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", sans-serif;
+}
+
+#oit-selection-btn:hover {
+  transform: scale(1.08) translateY(-1px);
+}
+
+/* ==================== 3. 鼠标划词流式翻译弹窗 ==================== */
+#oit-selection-popup {
+  position: fixed;
+  z-index: 2147483647;
+  width: 356px;
+  max-width: calc(100vw - 24px);
+  font-size: 14px;
+  line-height: 1.65;
+  overflow: hidden;
+  animation: oit-fade-in 0.16s ease-out;
+}
+
+@keyframes oit-fade-in {
+  from { opacity: 0; transform: translateY(5px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 复古报纸书籍风格弹窗 */
+#oit-selection-popup,
+#oit-selection-popup[data-oit-theme="retro-paper"] {
+  background-color: #f4ecd8;
+  background-image:
+    radial-gradient(rgba(120, 95, 60, 0.06) 1px, transparent 0),
+    linear-gradient(180deg, #f8f1df 0%, #ede0c4 100%);
+  background-size: 14px 14px, 100% 100%;
+  color: #261d14;
+  border: 1.5px solid #4a3b2c;
+  outline: 3px double rgba(74, 59, 44, 0.35);
+  outline-offset: -5px;
+  border-radius: 3px;
+  box-shadow:
+    4px 4px 0px rgba(43, 34, 24, 0.85),
+    0 14px 32px rgba(43, 34, 24, 0.28);
+  font-family: "Georgia", "Songti SC", "STSong", "Noto Serif SC", "SimSun", serif;
+}
+
+#oit-selection-popup[data-oit-theme="retro-paper"] .oit-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 13px;
+  background: rgba(226, 212, 181, 0.65);
+  border-bottom: 2px double #6e5a44;
+  cursor: move;
+  user-select: none;
+}
+
+#oit-selection-popup[data-oit-theme="retro-paper"] .oit-popup-brand {
+  font-weight: 700;
+  color: #261d14;
+  letter-spacing: 0.05em;
+}
+
+#oit-selection-popup[data-oit-theme="retro-paper"] .oit-lang-pill {
+  background: #e6d7b8;
+  color: #4a3b2c;
+  border: 1px solid #9c8468;
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-size: 10.5px;
+}
+
+#oit-selection-popup[data-oit-theme="retro-paper"] .oit-model-pill {
+  background: #7c2d12;
+  color: #fdf8ed;
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+#oit-selection-popup[data-oit-theme="retro-paper"] .oit-icon-btn {
+  border: 1px solid #8a7356;
+  background: #f9f3e3;
+  color: #3d3022;
+  font-size: 11.5px;
+  font-family: inherit;
+  padding: 2px 7px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+#oit-selection-popup[data-oit-theme="retro-paper"] .oit-icon-btn:hover {
+  background: #7c2d12;
+  color: #fdf8ed;
+  border-color: #7c2d12;
+}
+
+#oit-selection-popup[data-oit-theme="retro-paper"] .oit-popup-body {
+  padding: 13px 15px;
+  max-height: 260px;
+  overflow-y: auto;
+  color: #231b12;
+  font-size: 14px;
+  line-height: 1.72;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 液态玻璃风格弹窗 */
+#oit-selection-popup[data-oit-theme="liquid-glass"] {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.78) 0%,
+    rgba(242, 248, 255, 0.64) 50%,
+    rgba(232, 242, 255, 0.75) 100%
+  );
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  color: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  box-shadow:
+    0 20px 45px -10px rgba(15, 23, 42, 0.22),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 2px rgba(0, 122, 255, 0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", sans-serif;
+}
+
+#oit-selection-popup[data-oit-theme="liquid-glass"] .oit-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.42);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.65);
+  cursor: move;
+  user-select: none;
+}
+
+#oit-selection-popup[data-oit-theme="liquid-glass"] .oit-popup-brand {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+#oit-selection-popup[data-oit-theme="liquid-glass"] .oit-lang-pill {
+  background: rgba(255, 255, 255, 0.7);
+  color: #334155;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 10.5px;
+}
+
+#oit-selection-popup[data-oit-theme="liquid-glass"] .oit-model-pill {
+  background: linear-gradient(135deg, rgba(0, 122, 255, 0.18), rgba(88, 86, 214, 0.18));
+  color: #0066cc;
+  border: 1px solid rgba(0, 122, 255, 0.28);
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+#oit-selection-popup[data-oit-theme="liquid-glass"] .oit-icon-btn {
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.55);
+  color: #334155;
+  font-size: 11.5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+#oit-selection-popup[data-oit-theme="liquid-glass"] .oit-icon-btn:hover {
+  background: rgba(0, 122, 255, 0.88);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+#oit-selection-popup[data-oit-theme="liquid-glass"] .oit-popup-body {
+  padding: 13px 15px;
+  max-height: 260px;
+  overflow-y: auto;
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.68;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.oit-popup-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.oit-popup-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+/* ==================== 4. 右侧极简悬浮球（激活还原态同步为对应主题粉红色调） ==================== */
+#oit-floating-ball {
+  position: fixed;
+  right: 0;
+  top: 42%;
+  z-index: 2147483645;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 11px 8px 13px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12.5px;
+  font-weight: 700;
+  transition: padding-right 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+/* 复古报纸书签悬浮球 */
+#oit-floating-ball,
+#oit-floating-ball[data-oit-theme="retro-paper"] {
+  background: #f4ecd8;
+  color: #2b2218;
+  border: 1.5px solid #4a3b2c;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  box-shadow: -3px 3px 0px rgba(43, 34, 24, 0.78), -2px 4px 12px rgba(43, 34, 24, 0.18);
+  font-family: "Georgia", "Songti SC", "STSong", "Noto Serif SC", serif;
+}
+
+#oit-floating-ball[data-oit-theme="retro-paper"]:hover {
+  padding-right: 16px;
+  background: #efe2c4;
+}
+
+/* 复古书报激活还原态：古典干枯玫瑰胭脂粉 */
+#oit-floating-ball[data-oit-theme="retro-paper"].oit-active {
+  background: linear-gradient(180deg, #cf6a7e 0%, #b85267 100%);
+  color: #fff9fa;
+  border-color: #3d1d24;
+}
+
+/* 液态玻璃悬浮球 */
+#oit-floating-ball[data-oit-theme="liquid-glass"] {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(230, 242, 255, 0.58));
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  color: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  border-right: none;
+  border-radius: 22px 0 0 22px;
+  box-shadow:
+    -4px 8px 24px rgba(15, 23, 42, 0.14),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", sans-serif;
+}
+
+#oit-floating-ball[data-oit-theme="liquid-glass"]:hover {
+  padding-right: 17px;
+}
+
+/* 液态玻璃激活还原态：高透樱花玫瑰流体玻璃粉 */
+#oit-floating-ball[data-oit-theme="liquid-glass"].oit-active {
+  background: linear-gradient(135deg, rgba(244, 114, 182, 0.88), rgba(236, 72, 153, 0.84));
+  color: #ffffff;
+  border-color: rgba(255, 240, 248, 0.82);
+  box-shadow:
+    -4px 8px 24px rgba(236, 72, 153, 0.32),
+    inset 0 1px 1px rgba(255, 255, 255, 0.85);
+}
+
+.oit-ball-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9c8468;
+}
+
+#oit-floating-ball.oit-active .oit-ball-dot {
+  background: #ffe4e6;
+  box-shadow: 0 0 6px #ffe4e6;
+}
+
+#oit-floating-ball[data-oit-theme="liquid-glass"].oit-active .oit-ball-dot {
+  background: #ffffff;
+  box-shadow: 0 0 8px #ffffff;
+}
